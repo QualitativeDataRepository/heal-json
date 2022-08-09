@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const args = process.argv.slice(2);
 //console.log("args: ", args);
 
@@ -6,7 +8,7 @@ var empty = require('json-schema-empty').default;
 
 // Load json data (will eventually be implemented as APIs)
 const schema = require('./data/heal-schema.json');
-const dataverse = require("./" + args[0]);
+const dataverse = require(args[0]);
 //const dataverse = require("./dataverse_example.json")
 
 // create template and begin extracting data
