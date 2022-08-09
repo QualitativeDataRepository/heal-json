@@ -1,0 +1,26 @@
+{
+  "name": "heal-json",
+  "version": "1.0.0",
+  "description": "convert dataverse json to heal json",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/QualitativeDataRepository/heal-json.git"
+  },
+  "author": "Michael C. McCall",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/QualitativeDataRepository/heal-json/issues"
+  },
+  "homepage": "https://github.com/QualitativeDataRepository/heal-json#readme",
+  "dependencies": {
+    "json-schema-empty": "^1.1.1",
+    "jsonschema": "^1.4.1"
+  },
+  "bin": {
+    "heal-json": "index.js"
+  }
+}
