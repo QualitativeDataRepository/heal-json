@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
+const  path = require('path');
 const args = process.argv.slice(2);
+let absolute_arg = path.resolve(args[0]);
 //console.log("args: ", args);
 
 // Load packages
@@ -8,7 +10,7 @@ var empty = require('json-schema-empty').default;
 
 // Load json data (will eventually be implemented as APIs)
 const schema = require('./data/heal-schema.json');
-const dataverse = require(args[0]);
+const dataverse = require(absolute_arg)
 //const dataverse = require("./dataverse_example.json")
 
 // create template and begin extracting data
@@ -117,15 +119,7 @@ var v = new Validator();
 valid = v.validate(template, schema)
 
 if (valid.valid) {
-// write output to a file
-const fs = require('fs');
-const output = JSON.stringify(template, null, 4);
-fs.writeFile('output.json', output, (err) => {
-  if (err) {
-    throw(err)
-  }
-  console.log("Output written to: output.json");
-});
+  console.log(template);
 } else {
   console.log(valid.errors);
 }
