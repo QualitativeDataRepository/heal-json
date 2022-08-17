@@ -119,7 +119,7 @@ var v = new Validator();
 valid = v.validate(template, schema)
 
 if (valid.valid) {
-  console.log(template);
+  console.log(JSON.stringify(template));
 } else {
   console.log(valid.errors);
 }

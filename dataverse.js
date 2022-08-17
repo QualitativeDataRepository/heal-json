@@ -1,18 +1,17 @@
-const host = "https://data.qdr.syr.edu";
-const path = "/api/datasets/:persistentId/?persistentId=doi:10.5064/F6TZKMDU"
-const url = host.concat(path)
+const host = "https://data.stage.qdr.org";
+const path = "/api/datasets/:persistentId/?persistentId="
+var pid = "doi:10.33564/FK2QRMOYP"
+
+const url = host.concat(path).concat(pid)
+
 var metadata;
 
-https.get("https://data.qdr.syr.edu/api/datasets/:persistentId/?persistentId=doi:10.5064/F6TZKMDU", res => {
-
+https.get(url, res => {
     let rawData = ''
-
     res.on('data', chunk => {
         rawData += chunk
     })
-
     res.on('end', () => {
         metadata = JSON.parse(rawData)
     })
-
 })
