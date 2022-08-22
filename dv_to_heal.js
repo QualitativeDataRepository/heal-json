@@ -9,7 +9,12 @@ const dataverseToHEAL = (dataverse)=>{
 
     // create template and begin extracting data
     var template = empty(schema);
-    var heal = dataverse.data.latestVersion.metadataBlocks.heal.fields;
+    try {
+        var heal = dataverse.data.latestVersion.metadataBlocks.heal.fields;
+    } catch (err) {
+        console.log("Not HEAL!!");
+        return(err);
+    }
     var citation = dataverse.data.latestVersion.metadataBlocks.citation.fields;
 
     // cycle through two levels and assign values into the empty template
@@ -50,7 +55,7 @@ const dataverseToHEAL = (dataverse)=>{
 
     template['contacts_and_registrants']['contacts'] = [];
     for (var i=0; i<citation_map.datasetContact.length; i++) {
-    contact_name = citation_map.datasetContact[i]['datasetContactName']['value'].split(", ");
+    var contact_name = citation_map.datasetContact[i]['datasetContactName']['value'].split(", ");
     template['contacts_and_registrants']['contacts'].push( {
         contact_first_name: contact_name[1],
         contact_last_name: contact_name[0],
@@ -63,14 +68,14 @@ const dataverseToHEAL = (dataverse)=>{
     for (var i=0; i<citation_map.author.length; i++) {
     // investigator ID is not necessarily specified
     try {
-    investigator_ID = [{
+    var investigator_ID = [{
         investigator_ID_type: citation_map.author[0]['authorIdentifierScheme']['value'],
         investigator_ID_value: citation_map.author[0]['authorIdentifier']['value']
     }];
     } catch(e) {
-        investigator_ID = [];
+        var investigator_ID = [];
     }
-    author_name = citation_map.author[i]['authorName']['value'].split(", ")
+    var author_name = citation_map.author[i]['authorName']['value'].split(", ")
     template.citation['investigators'].push( {
         investigator_first_name: author_name[1],
         investigator_last_name: author_name[0],
@@ -110,7 +115,7 @@ const dataverseToHEAL = (dataverse)=>{
     // Validate against the schema again to quality check output
     var Validator = require('jsonschema').Validator;
     var v = new Validator();
-    valid = v.validate(template, schema)
+    const valid = v.validate(template, schema)
 
     if (valid.valid) {
         return template;
