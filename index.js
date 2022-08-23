@@ -1,12 +1,27 @@
 #!/usr/bin/env node
 
-require('./dv_to_heal.js')
+const dataverseToHEAL = require('./dv_api.js');
+const healToDataverse = require('./heal_to_dv.js');
+const outputJSON = require('./output.js');
 
-const  path = require('path');
 const args = process.argv.slice(2);
-let absolute_arg = path.resolve(args[0]);
-const input_json = require(absolute_arg);
+if (args.length == 0) {
+    console.log("Error: no argument specified");
+    console.log("Usage: ".concat(process.argv[1].concat(" <pid> <api key>")));
+    console.log("Usage: ".concat(process.argv[1].concat(" <heal.json>")));
 
-const output = dataverseToHEAL(input_json);
-const pretty_print = JSON.stringify(output, null, 4);
-console.output(pretty_print);
+} else {
+    if (args[0].substring(0, 4) == "doi:") {
+        const output = dataverseToHEAL(args[0], args[1]);
+    } else {
+        const  path = require('path');
+        let absolute_arg = path.resolve(args[0]);
+        const input_json = require(absolute_arg);
+        const dataverseJSON = healToDataverse(input_json);
+        outputJSON(dataverseJSON);
+    }
+}
+
+
+/*const pretty_print = JSON.stringify(output, null, 4);
+console.output(pretty_print);*/

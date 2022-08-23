@@ -1,5 +1,5 @@
 'use strict';
-const dataverseToHEAL = (dataverse)=>{
+const generateHEAL = (dataverse)=>{
     // Load packages
     var empty = require('json-schema-empty').default;
 
@@ -12,7 +12,7 @@ const dataverseToHEAL = (dataverse)=>{
     try {
         var heal = dataverse.data.latestVersion.metadataBlocks.heal.fields;
     } catch (err) {
-        console.log("Not HEAL!!");
+        console.log("Error: No HEAL metadata block detected!");
         return(err);
     }
     var citation = dataverse.data.latestVersion.metadataBlocks.citation.fields;
@@ -124,4 +124,4 @@ const dataverseToHEAL = (dataverse)=>{
     }
 }
 
-module.exports = dataverseToHEAL
+module.exports = generateHEAL
