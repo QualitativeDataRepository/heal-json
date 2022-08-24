@@ -4,7 +4,7 @@ const healToDataverse = (input)=>{
             heal: { fields: new Array, displayName: "HEAL metadata schema", name: "heal" }
     }}};
 
-    const schema = require('./data/heal-schema.json');
+    const schema = require('../data/heal-schema.json');
 
     var citation = output.datasetVersion.metadataBlocks.citation.fields;
     var heal = output.datasetVersion.metadataBlocks.heal.fields;

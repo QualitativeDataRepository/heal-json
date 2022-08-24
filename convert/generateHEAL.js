@@ -4,7 +4,7 @@ const generateHEAL = (dataverse)=>{
     var empty = require('json-schema-empty').default;
 
     // Load json data (will eventually be implemented as APIs)
-    const schema = require('./data/heal-schema.json');
+    const schema = require('../data/heal-schema.json');
     //const dataverse = require("./dataverse_example.json")
 
     // create template and begin extracting data

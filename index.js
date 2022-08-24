@@ -2,7 +2,7 @@
 
 const dataverseToHEAL = require('./api/dataverseToHEAL.js');
 const uploadDataverse = require('./api/uploadDataverse.js');
-const healToDataverse = require('./heal_to_dv.js');
+const healToDataverse = require('./convert/healToDataverse.js');
 const outputJSON = require('./output.js');
 
 const args = process.argv.slice(2);

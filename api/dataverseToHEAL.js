@@ -1,5 +1,5 @@
 //const { __esModule } = require('json-schema-empty');
-const generateHEAL = require('../dv_to_heal.js');
+const generateHEAL = require('../convert/generateHEAL.js');
 const outputJSON = require('../output.js');
 
 var https = require('https');
