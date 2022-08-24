@@ -14,12 +14,16 @@ npm i https://github.com/QualitativeDataRepository/heal-json.git
 
 ## Running
 
-`heal-json` is run as a command-line app with node.js. It takes one argument, an input json file.
+`heal-json` is run as a command-line app with node.js. It has two functions: converting from a dataverse metadata file to a HEAL metadata file, and vice versa.
 
-If installed globally through `npm`, it can be run as so:
+If installed globally through `npm`, HEAL metadata can be generated from a dataverse project as so:
 
 ```
-heal-json input.json
+heal-json 'doi:XXXX/XXXX.YYYY' > heal.json
 ```
 
-Without any further arguments, the program defaults to standard output. If there are any errors in the metadata that prevent validation, they will be output to the stderr.
+and HEAL data can be uploaded to dataverse like so:
+
+```
+heal-json heal.json <api key>
+```
