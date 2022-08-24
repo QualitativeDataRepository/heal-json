@@ -13,7 +13,7 @@ const healToDataverse = (input)=>{
 
     // Copy heal metadata block as closely as possible
     Object.keys(input).forEach(function(key) {
-    if (key == "citation" || key == "data") { // TESTING FIELDS ONE BY ONE, REMOVE THIS
+    if (key !== "findings" && key !== "study_type" && key !== "study_translational_focus") { // TESTING FIELDS ONE BY ONE, REMOVE THIS
         // top level of each block in HEAL json
         let new_field = {
             typeName: key,
@@ -24,7 +24,8 @@ const healToDataverse = (input)=>{
 
         // second level of each block in HEAL json
         Object.keys(input[key]).forEach(function(key_2) {
-            if (key_2 !== "investigators") {
+            //console.log(key.concat(": ", key_2));
+            if (key_2 !== "investigators" && key_2 !== "study_collections" && key !== "registrants") { // This data goes in the main dataverse citation block
             new_field.value[key_2] = {
                 typeName: key_2,
                 multiple: false,
@@ -34,8 +35,12 @@ const healToDataverse = (input)=>{
 
             // start by handling simple strings
             if (schema['properties'][key]['properties'][key_2]['type'] == "string") {
-                new_field.value[key_2].typeClass = "primitive";
                 new_field.value[key_2].multiple = false;
+                if (typeof schema['properties'][key]['properties'][key_2]['enum'] !== "undefined") {
+                    new_field.value[key_2].typeClass = "controlledVocabulary";
+                } else {
+                    new_field.value[key_2].typeClass = "primitive";
+                }
             } else if (schema['properties'][key]['properties'][key_2]['type'] == "integer") {
                 new_field.value[key_2].typeClass = "primitive";
                 new_field.value[key_2].multiple = false;
@@ -51,18 +56,21 @@ const healToDataverse = (input)=>{
                     if (typeof schema['properties'][key]['properties'][key_2]['items']['enum'] !== 'undefined') {
                         new_field.value[key_2].typeClass = "controlledVocabulary";
                     } else {
-                        new_field.value[key_2].multiple = false;
+                        //new_field.value[key_2].multiple = false;
                         new_field.value[key_2].typeClass = "primitive";
-                        // Does the array need to be flattened into a string?
-                        if (input[key][key_2].length == 1) {
-                            new_field.value[key_2].value = input[key][key_2][0];
-                        } 
                     }
+
+                    // Does the array need to be flattened into a string?
+                    /*if (input[key][key_2].length == 1) {
+                        new_field.value[key_2].value = input[key][key_2][0];
+                        //new_field.value[key_2].multiple = false;
+                    } */
+                }
 
             }
 
             // Change boolean to Yes/No strings
-            } else if (schema['properties'][key]['properties'][key_2]['type'] == "boolean") {
+            if (schema['properties'][key]['properties'][key_2]['type'] == "boolean") {
                 new_field.value[key_2].typeClass = "controlledVocabulary";
                 if (input[key][key_2]) {
                     new_field.value[key_2].value = "Yes";

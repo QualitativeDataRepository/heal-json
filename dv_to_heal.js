@@ -54,6 +54,9 @@ const generateHEAL = (dataverse)=>{
     template.minimal_info["study_description"] = citation_map.dsDescription[0]["dsDescriptionValue"]["value"];
 
     template['contacts_and_registrants']['contacts'] = [];
+    template['contacts_and_registrants']['registrants'] = template.registrants;
+    delete template.registrants;
+
     for (var i=0; i<citation_map.datasetContact.length; i++) {
     var contact_name = citation_map.datasetContact[i]['datasetContactName']['value'].split(", ");
     template['contacts_and_registrants']['contacts'].push( {
