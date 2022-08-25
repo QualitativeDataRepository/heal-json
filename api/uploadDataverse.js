@@ -16,8 +16,13 @@ const uploadDataverse = (json, api)=> {
         }
     };
 
-    var req = https.request(options, res => {
-        console.log(res.statusMessage);
+    var req = https.request(options, resp => {
+        resp.on('data', function(d) {           
+            //console.log(d)             // buffered data; like <Buffer 7b 22 69...
+            process.stdout.write(d);  // working fine(prints decoded data in console)
+        });
+    }).on('error', function(e) {
+        console.error(e);
     });
 
     req.write(post);
