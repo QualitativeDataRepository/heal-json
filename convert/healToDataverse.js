@@ -35,7 +35,6 @@ const healToDataverse = (input)=>{
                 let field_type = field_schema.type;
                 new_field.value[key_2]['value'] = input[key][key_2];
 
-                const single_special = ['study_subject_type']; // remove this and the associated block below with new TSV
 
                 // start by handling simple strings, detect controlledVocab
                 if (field_type == "string") {
@@ -48,16 +47,13 @@ const healToDataverse = (input)=>{
                     // integers need to be strings
                     new_field.value[key_2].typeClass = "primitive";
                     new_field.value[key_2].multiple = false;
+                    console.log(key.concat(": ", key_2));
                     new_field.value[key_2]['value'] = input[key][key_2].toString();
                 
                 // handling more complex objects
                 } else if (field_type == "array") {
                     if (field_schema.items.type == "string") {
-                        if (single_special.includes(key_2)) { // remove this condition with TSV update
-                            new_field.value[key_2].value = input[key][key_2][0];
-                        } else {
-                            new_field.value[key_2].multiple = true;
-                        }
+                        new_field.value[key_2].multiple = true;
 
                         // Is there controlled vocabulary?
                         if (typeof field_schema.items.enum !== 'undefined') {
@@ -72,7 +68,7 @@ const healToDataverse = (input)=>{
                 }
 
                 // Change boolean to Yes/No strings
-                if (schema['properties'][key]['properties'][key_2]['type'] == "boolean") {
+                if (field_type == "boolean") {
                     new_field.value[key_2].typeClass = "controlledVocabulary";
                     if (input[key][key_2]) {
                         new_field.value[key_2].value = "Yes";

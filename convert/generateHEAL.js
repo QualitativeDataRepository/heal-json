@@ -47,16 +47,17 @@ const generateHEAL = (dataverse)=>{
     template.data_availability.produce_data = (template.data_availability.produce_data == "Yes");
     template.data_availability.produce_other = (template.data_availability.produce_data == "Yes");
     
-    if (typeof template.study_type.study_subject_type == "string") {
-        template.study_type.study_subject_type = [ template.study_type.study_subject_type ];
-    }
+    // idk why this doesn't work automatically, but some fields need to be array-ified
+    Object.entries(template.human_treatment_applicability).forEach(([key, value]) => {
+        if (typeof value == "string") {
+            template.human_treatment_applicability[key] = [ value ];
+        }    
+    });
 
     // should be a sublevel, it isn't for dataverse purposes
     template['contacts_and_registrants']['contacts'] = [];
     template['contacts_and_registrants']['registrants'] = template.registrants;
     delete template.registrants;
-
-
 
     // data that got merged into standard dataverse categories
     // requires manual handling
@@ -133,7 +134,7 @@ const generateHEAL = (dataverse)=>{
         return template;
     } else {
         console.log(valid.errors);
-        //return template;
+        return template;
     }
 }
 

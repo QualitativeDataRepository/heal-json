@@ -23,7 +23,3 @@ if (args.length == 0) {
         //outputJSON(dataverseJSON);
     }
 }
-
-
-/*const pretty_print = JSON.stringify(output, null, 4);
-console.output(pretty_print);*/
