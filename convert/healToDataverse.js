@@ -9,14 +9,15 @@ const healToDataverse = (input)=>{
     var citation = output.datasetVersion.metadataBlocks.citation.fields;
     var heal = output.datasetVersion.metadataBlocks.heal.fields;
 
+
     // Copy heal metadata block as closely as possible
-    Object.keys(input).forEach(function(key) {
-        // remove this when the DV block is fixed
-        // except contacts and registrants, they're handled separately
-        if (key !== "contacts_and_registrants" && key !== "findings" && key !== "study_translational_focus") { // TESTING FIELDS ONE BY ONE, REMOVE THIS
-            // top level of each block in HEAL json
+    // Nesting in the HEAL JSON rarely goes beyond two levels
+    // so we will run two nested forEach loops, handling various data types
+    Object.keys(input).forEach(function(key) { // top level of each block in HEAL json
+        // contacts and registrants are handled separately
+        if (key !== "contacts_and_registrants") {
             let new_field = {
-                typeName: key,
+                typeName: key, 
                 typeClass: "compound",
                 multiple: false,
                 value: new Object
@@ -24,64 +25,69 @@ const healToDataverse = (input)=>{
 
             // second level of each block in HEAL json
             Object.keys(input[key]).forEach(function(key_2) {
-                //console.log(key.concat(": ", key_2));
-                if (key_2 !== "study_collections") { // remove this when the DV block is fixed
-                new_field.value[key_2] = {
-                    typeName: key_2,
-                    multiple: false,
-                };
-                
-                let field_schema = schema['properties'][key]['properties'][key_2];
-                let field_type = field_schema.type;
-                new_field.value[key_2]['value'] = input[key][key_2];
+                //console.log(key.concat(": ", key_2)); // for debugging which field breaks
+                // data repositories goes top-level later below
+                if (key_2 !== "data_repositories") { 
+                    new_field.value[key_2] = {
+                        typeName: key_2,
+                        multiple: false,
+                    };
+                    
+                    let field_schema = schema['properties'][key]['properties'][key_2];
+                    let field_type = field_schema.type;
+                    new_field.value[key_2]['value'] = input[key][key_2];
 
-
-                // start by handling simple strings, detect controlledVocab
-                if (field_type == "string") {
-                    if (typeof field_schema.enum !== "undefined") {
-                        new_field.value[key_2].typeClass = "controlledVocabulary";
-                    } else {
-                        new_field.value[key_2].typeClass = "primitive";
-                    }
-                } else if (field_type == "integer") {
-                    // integers need to be strings
-                    new_field.value[key_2].typeClass = "primitive";
-                    new_field.value[key_2].multiple = false;
-                    console.log(key.concat(": ", key_2));
-                    new_field.value[key_2]['value'] = input[key][key_2].toString();
-                
-                // handling more complex objects
-                } else if (field_type == "array") {
-                    if (field_schema.items.type == "string") {
-                        new_field.value[key_2].multiple = true;
-
-                        // Is there controlled vocabulary?
-                        if (typeof field_schema.items.enum !== 'undefined') {
+                    // start by handling simple strings, detect controlledVocab
+                    if (field_type == "string") {
+                        if (typeof field_schema.enum !== "undefined") {
                             new_field.value[key_2].typeClass = "controlledVocabulary";
                         } else {
-                            //new_field.value[key_2].multiple = false;
                             new_field.value[key_2].typeClass = "primitive";
                         }
+                    } else if (field_type == "integer") {
+                        // integers need to be strings
+                        new_field.value[key_2].typeClass = "primitive";
+                        new_field.value[key_2].multiple = false;
+                        console.log(key.concat(": ", key_2));
+                        new_field.value[key_2]['value'] = input[key][key_2].toString();
+                    
+                    // handling more complex objects
+                    } else if (field_type == "array") {
+                        if (field_schema.items.type == "string") {
+                            new_field.value[key_2].multiple = true;
+                            if (key_2 == "treatment_mode" || key_2 == "treatment_application_level" || key_2 == "treatment_novelty") {
+                                new_field.value[key_2].multiple = false;
+                                new_field.value[key_2]['value'] = new_field.value[key_2]['value'][0]; 
+                            }
 
+                            // Is there controlled vocabulary?
+                            if (typeof field_schema.items.enum !== 'undefined') {
+                                new_field.value[key_2].typeClass = "controlledVocabulary";
+                            } else {
+                                //new_field.value[key_2].multiple = false;
+                                new_field.value[key_2].typeClass = "primitive";
+                            }
+                        }
                     }
 
-                }
-
-                // Change boolean to Yes/No strings
-                if (field_type == "boolean") {
-                    new_field.value[key_2].typeClass = "controlledVocabulary";
-                    if (input[key][key_2]) {
-                        new_field.value[key_2].value = "Yes";
-                    } else {
-                        new_field.value[key_2].value = "No";
+                    // Change boolean to Yes/No strings
+                    if (field_type == "boolean") {
+                        new_field.value[key_2].typeClass = "controlledVocabulary";
+                        if (input[key][key_2]) {
+                            new_field.value[key_2].value = "Yes";
+                        } else {
+                            new_field.value[key_2].value = "No";
+                        }
                     }
                 }
-            }
             });
 
             // reset "citation" to "heal_citation" for dataverse compatibility
+            // similar issue with study_translational_focus
             if (new_field.typeName == "citation") {
                 new_field.typeName = "heal_citation"
+            } else if (new_field.typeName == "study_translational_focus") {
+                new_field.typeName = "study_translational_focus_group"
             }
 
             heal.push(new_field);
@@ -95,7 +101,6 @@ const healToDataverse = (input)=>{
         multiple: true,
         value: new Array
     };
-
     input.contacts_and_registrants.registrants.forEach(function(entry) {
         Object.keys(entry).forEach(function(value) {
             entry[value] = {
@@ -109,12 +114,36 @@ const healToDataverse = (input)=>{
     });
     heal.push(registrants);
 
-    // Add the regular dataverse citation fields
+    // also move repositories to the top level
+    var repositories = {
+        typeName: "data_repositories",
+        typeClass: "compound",
+        multiple: true,
+        value: new Array
+    };
+    input.metadata_location.data_repositories.forEach(function (entry) {
+        Object.keys(entry).forEach(function (value) {
+            entry[value] = {
+                typeName: value,
+                multiple: false,
+                typeClass: "primitive",
+                value: entry[value]
+            }
+        });
+        repositories.value.push(entry);
+    });
+    heal.push(repositories);
+
+    // Add the standardr dataverse citation fields
     citation.push({ value: input.minimal_info.study_name,
         typeClass: "primitive", multiple: false, typeName: "title" });
 
     author = { value: new Array, typeClass: "compound", multiple: true, typeName: "author"};
     input.citation.investigators.forEach(function(investigator) {
+        /*if (investigator.investigator_ID == []) {
+            investigator.investigator_ID.push( { investigator_ID_type: "ORCID", 
+                                                investigator_ID_value: "" } );
+        }*/
         let new_investigator = {
             authorName: {
                 value: investigator.investigator_last_name.concat(", ", investigator.investigator_first_name),

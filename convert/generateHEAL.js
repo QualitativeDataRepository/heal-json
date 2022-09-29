@@ -41,6 +41,17 @@ const generateHEAL = (dataverse)=>{
         template[toplevel] = sublevel;
     }
 
+    // rename duplicate names that had to be changed in dataverse
+    template['study_translational_focus'] = template.study_translational_focus_group;
+    delete template.study_translational_focus_group; 
+
+    // should be a sublevel, these aren't in the dataverse block schema for dv purposes
+    template['contacts_and_registrants']['contacts'] = [];
+    template['contacts_and_registrants']['registrants'] = template.registrants;
+    delete template.registrants;
+    template['metadata_location']['data_repositories'] = template.data_repositories;
+    delete template.data_repositories;
+
     // Yes to binary values
     template.citation.heal_funded_status = (template.citation.heal_funded_status == "Yes");
     template.citation.study_collection_status = (template.citation.study_collection_status == "Yes");
@@ -54,10 +65,6 @@ const generateHEAL = (dataverse)=>{
         }    
     });
 
-    // should be a sublevel, it isn't for dataverse purposes
-    template['contacts_and_registrants']['contacts'] = [];
-    template['contacts_and_registrants']['registrants'] = template.registrants;
-    delete template.registrants;
 
     // data that got merged into standard dataverse categories
     // requires manual handling
