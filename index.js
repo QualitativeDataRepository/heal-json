@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-const dataverseToHEAL = require('./api/dataverseToHEAL.js');
-const uploadDataverse = require('./api/uploadDataverse.js');
-const healToDataverse = require('./convert/healToDataverse.js');
+const dataverseToHEAL = require('./api/fromDataverse.js');
+const uploadDataverse = require('./api/toDataverse.js');
+const healToDataverse = require('./convert/toDataverse.js');
 const outputJSON = require('./output.js');
 
 const args = process.argv.slice(2);
@@ -20,6 +20,5 @@ if (args.length == 0) {
         const input_json = require(absolute_arg);
         const dataverseJSON = healToDataverse(input_json);
         uploadDataverse(dataverseJSON, args[1])
-        //outputJSON(dataverseJSON);
     }
 }

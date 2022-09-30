@@ -48,7 +48,7 @@ const healToDataverse = (input)=>{
                         // integers need to be strings
                         new_field.value[key_2].typeClass = "primitive";
                         new_field.value[key_2].multiple = false;
-                        console.log(key.concat(": ", key_2));
+                        //console.log(key.concat(": ", key_2));
                         new_field.value[key_2]['value'] = input[key][key_2].toString();
                     
                     // handling more complex objects
