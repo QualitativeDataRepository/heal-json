@@ -1,7 +1,7 @@
-const healToDataverse = require('./convert/toDataverse.js');
+const healToDataverse = require('./src/convertToDataverse.js');
 
 test("generateHEAL", () => {
-    const generateHEAL = require('./convert/toHEAL.js')
+    const generateHEAL = require('./src/convertToHEAL.js')
     const dv = require('./test_data/dv.json');
     const heal = generateHEAL(dv);
     expect(heal).toHaveProperty('citation.heal_funded_status');
@@ -14,7 +14,7 @@ test("generateHEAL", () => {
 
 test("convertDV", () => {
     const heal = require('./test_data/heal.json');
-    const healToDataverse = require('./convert/toDataverse.js');
+    const healToDataverse = require('./src/convertToDataverse.js');
     const dv = healToDataverse(heal);
     expect(heal).toBeDefined();
 });

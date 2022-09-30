@@ -1,6 +1,6 @@
 //const { __esModule } = require('json-schema-empty');
-const generateHEAL = require('../convert/toHEAL.js');
-const outputJSON = require('../output.js');
+const generateHEAL = require('./convertToHEAL.js');
+const outputJSON = require('./output.js');
 
 var https = require('https');
 
