@@ -17,11 +17,13 @@
   },
   "homepage": "https://github.com/QualitativeDataRepository/heal-json#readme",
   "dependencies": {
-    "jest": "^29.1.2",
     "json-schema-empty": "^1.1.1",
     "jsonschema": "^1.4.1"
   },
   "bin": {
     "heal-json": "index.js"
+  },
+  "devDependencies": {
+    "jest": "^29.1.2"
   }
 }
