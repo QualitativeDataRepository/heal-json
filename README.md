@@ -1,4 +1,5 @@
 # heal-json
+[![codecov](https://codecov.io/github/QualitativeDataRepository/heal-json/branch/main/graph/badge.svg?token=YI9SHR9OYC)](https://codecov.io/github/QualitativeDataRepository/heal-json)
 
 This package converts metadata exported from a project on Dataverse into a HEAL standard metadata JSON file.
 
