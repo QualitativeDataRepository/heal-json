@@ -1,7 +1,5 @@
-var https = require('https');
-
 const uploadDataverse = (json, api)=> {
-
+    var https = require('https');
     let post = JSON.stringify(json);
 
     options = {

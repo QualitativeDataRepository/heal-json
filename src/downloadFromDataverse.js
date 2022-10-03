@@ -1,10 +1,6 @@
-//const { __esModule } = require('json-schema-empty');
-const generateHEAL = require('./convertToHEAL.js');
-const outputJSON = require('./output.js');
-
-var https = require('https');
-
-const dataverseToHEAL = (pid, api)=>{
+const dataverseToHEAL = (pid, api, callback)=>{
+    const https = require('https');
+    const generateHEAL = require('./convertToHEAL.js');
 
     options = {
         host: "data.stage.qdr.org",
@@ -23,7 +19,7 @@ const dataverseToHEAL = (pid, api)=>{
             rawData += chunk
         });
         res.on('end', () => {
-            outputJSON(generateHEAL(JSON.parse(rawData)));
+            callback(generateHEAL(JSON.parse(rawData)));
         });
     });
 

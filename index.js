@@ -3,7 +3,7 @@
 const dataverseToHEAL = require('./src/downloadFromDataverse.js');
 const uploadDataverse = require('./src/uploadToDataverse.js');
 const healToDataverse = require('./src/convertToDataverse.js');
-const outputJSON = require('./src/output.js');
+const outputJSON = require('./src/output.js')
 
 const args = process.argv.slice(2);
 if (args.length == 0) {
@@ -13,7 +13,7 @@ if (args.length == 0) {
 
 } else {
     if (args[0].substring(0, 4) == "doi:") {
-        const output = dataverseToHEAL(args[0], args[1]);
+        dataverseToHEAL(args[0], args[1], outputJSON);
     } else {
         const  path = require('path');
         let absolute_arg = path.resolve(args[0]);
