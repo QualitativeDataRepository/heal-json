@@ -22,6 +22,20 @@ test("convertDV", () => {
 });
 
 test("download", done => {
+    const doi = "doi:10.33564/FK2ORF6KW";
+    const dataverseToHEAL = require('./src/downloadFromDataverse.js')
+    const callback = function (data) {
+        try {
+            expect(data).toBeDefined();
+            done();
+        } catch (error) {
+            done(error);
+        }
+    }
+    dataverseToHEAL(doi, process.env.DATAVERSE_KEY, callback)
+});
+
+test("downloadFail", done => {
     const doi = "doi:10.33564/FK2W0PLDR";
     const dataverseToHEAL = require('./src/downloadFromDataverse.js')
     const callback = function (data) {
@@ -32,7 +46,7 @@ test("download", done => {
             done(error);
         }
     }
-    dataverseToHEAL("doi:10.33564/FK2ORF6KW", undefined, callback)
+    dataverseToHEAL(doi, undefined, callback)
 });
 
 test("output", () => {
