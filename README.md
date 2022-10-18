@@ -1,9 +1,12 @@
 # heal-json
 [![codecov](https://codecov.io/github/QualitativeDataRepository/heal-json/branch/main/graph/badge.svg?token=YI9SHR9OYC)](https://codecov.io/github/QualitativeDataRepository/heal-json)
 
-This package converts metadata exported from a project on Dataverse into a HEAL standard metadata JSON file.
+This package converts between Dataverse and HEAL metadata formats. 
 
-As input, `heal-json` expects a dataverse json file exported by the Native API. See: https://guides.dataverse.org/en/latest/api/native-api.html#id46 . The dataset exported needs to be enabled with HEAL metadata block in dataverse.
+- From a dataverse project with the [associated HEAL metadata block](https://github.com/qualitativeDataRepository/heal-metadata) enabled, it produces a HEAL-compliant JSON file.
+- From a HEAL json file, it converts the metadata into a Dataverse metadata file and uploads it to a Dataverse instance.
+
+As input, `heal-json` either a persistent ID (to convert from dataverse to HEAL), or a HEAL json file (to convert and upload to dataverse).
 
 ## Installing
 
@@ -20,7 +23,7 @@ npm i https://github.com/QualitativeDataRepository/heal-json.git
 If installed globally through `npm`, HEAL metadata can be generated from a dataverse project as so:
 
 ```
-heal-json 'doi:XXXX/XXXX.YYYY' > heal.json
+heal-json 'doi:XXXX/XXXX.YYYY' <api key> > heal.json
 ```
 
 and HEAL data can be uploaded to dataverse like so:
