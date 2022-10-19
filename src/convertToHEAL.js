@@ -34,6 +34,7 @@ const generateHEAL = (dataverse)=>{
             });
         } else { // in case of only two levels
             for (let key in sublevel) {
+                if (sublevel[key]["value"])
                 sublevel[key] = sublevel[key]["value"];
             }
         }
@@ -139,10 +140,6 @@ const generateHEAL = (dataverse)=>{
         template.data.subject_data_unit_of_analysis_expected_number = Number(template.data.subject_data_unit_of_analysis_expected_number)
     }
 
-    if (typeof(template.citation.study_collections) !== 'undefined') {
-        template.citation.study_collections = [ template.citation.study_collections ]
-    }
-
     // Validate against the schema again to quality check output
     var Validator = require('jsonschema').Validator;
     var v = new Validator();
@@ -152,7 +149,7 @@ const generateHEAL = (dataverse)=>{
         return template;
     } else {
         console.log(valid.errors);
-        return template;
+        //return template; //useful for debugging
     }
 }
 
