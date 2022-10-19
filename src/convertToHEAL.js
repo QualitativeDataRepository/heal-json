@@ -77,7 +77,12 @@ const generateHEAL = (dataverse)=>{
     template.minimal_info["study_description"] = citation_map.dsDescription[0]["dsDescriptionValue"]["value"];
 
     for (var i=0; i<citation_map.datasetContact.length; i++) {
-        var contact_name = citation_map.datasetContact[i]['datasetContactName']['value'].split(", ");
+        // In case there's no name for the contact (dataverse only requires email address)
+        try {
+            var contact_name = citation_map.datasetContact[i]['datasetContactName']['value'].split(", ");
+        } catch(e) {
+            var contact_name = ["undefined", "undefined"];
+        }
         template['contacts_and_registrants']['contacts'].push( {
             contact_first_name: contact_name[1],
             contact_last_name: contact_name[0],
@@ -98,10 +103,16 @@ const generateHEAL = (dataverse)=>{
             var investigator_ID = [];
         }
         var author_name = citation_map.author[i]['authorName']['value'].split(", ")
+        // author affiliation is also not necessarily specified
+        try {
+            var author_affiliation = citation_map.author[i]['authorAffiliation']['value'];
+        } catch(e) {
+            var author_affiliation = "";
+        }
         template.citation['investigators'].push( {
             investigator_first_name: author_name[1],
             investigator_last_name: author_name[0],
-            investigator_affiliation: citation_map.author[i]['authorAffiliation']['value'],
+            investigator_affiliation: author_affiliation,
             investigator_ID: investigator_ID
         });
     }

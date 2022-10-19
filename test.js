@@ -1,5 +1,5 @@
 const healToDataverse = require('./src/convertToDataverse.js');
-jest.setTimeout(30 * 1000) // in milliseconds
+jest.setTimeout(60 * 1000) // in milliseconds
 
 test("generateHEAL", () => {
     const generateHEAL = require('./src/convertToHEAL.js')
@@ -26,7 +26,7 @@ test("download", done => {
     const doi = "doi:10.33564/FK2ORF6KW";
     const dataverseToHEAL = require('./src/downloadFromDataverse.js')
     const callback = function (data) {
-        expect(data).toBeDefined();
+        expect(data).toHaveProperty("data_availability.data_collection_start_date");
         done();
     }
     dataverseToHEAL(doi, process.env.DATAVERSE_KEY, callback)
