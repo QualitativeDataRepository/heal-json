@@ -4,7 +4,6 @@ on: [push]
 
 jobs:
   coverage:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -16,8 +15,8 @@ jobs:
       - run: npm ci
       - name: Run unit tests
         run: |
-        echo "DATAVERSE_KEY=$DATAVERSE_KEY" > .env
-        npm test -- --coverage --collectCoverageFrom="./src/**"
+            echo "DATAVERSE_KEY=$DATAVERSE_KEY" > .env
+            npm test -- --coverage --collectCoverageFrom="./src/**"
         env:
             DATAVERSE_KEY: ${{ secrets.DATAVERSE_KEY }}
       - name: Upload coverage to Codecov
