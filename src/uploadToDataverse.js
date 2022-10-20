@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 const uploadDataverse = (json, api)=> {
     var https = require('https');
     let post = JSON.stringify(json);
