@@ -13,7 +13,7 @@ test("generateHEAL", () => {
     expect(heal).toHaveProperty('contacts_and_registrants');
 });
 
-test("randomHEAL", () => {
+/*test("randomHEAL", () => {
     const jsf  = require('json-schema-faker');
     const schema = require('./data/heal-schema.json');
     const convertToDataverse = require("./src/convertToDataverse.js")
@@ -22,7 +22,7 @@ test("randomHEAL", () => {
     var generated = jsf.generate(schema);
     const dv = healToDataverse(generated);
     expect(dv).toBeDefined();
-});
+});*/
 
 test("convertDV", () => {
     const heal = require('./test_data/heal.json');

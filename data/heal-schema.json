@@ -288,7 +288,8 @@
               "contact_email": {
                 "description": "Institutional email of study contact",
                 "type": "string",
-                "format": "email"
+                "format": "email",
+                "x-faker": "internet.email"
               }
             }
           }
@@ -319,7 +320,8 @@
               "registrant_email": {
                 "description": "Institutional email of study registrant",
                 "type": "string",
-                "format": "email"
+                "format": "email",
+                "x-faker": "internet.email"
               }
             }
           }

@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/QualitativeDataRepository/heal-json#readme",
   "dependencies": {
+    "faker": "^5.5.3",
     "json-schema-empty": "^1.1.1",
     "jsonschema": "^1.4.1"
   },

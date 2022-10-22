@@ -1,7 +1,9 @@
 const healToDataverse = (input)=>{
     var output = { datasetVersion: { metadataBlocks: {
-            citation: { fields: new Array, displayName: "Citation Metadata" },
-            heal: { fields: new Array, displayName: "HEAL metadata schema", name: "heal" }
+            citation: { fields: new Array,
+                name: "citation", displayName: "Citation Metadata" },
+            heal: { fields: new Array,
+                displayName: "HEAL metadata schema", name: "heal" }
     }}};
 
     const schema = require('../data/heal-schema.json');
@@ -94,27 +96,34 @@ const healToDataverse = (input)=>{
         }
     });
 
-    // move registrants to the top level, DV compatibility issue
-    if (typeof input.contacts_and_registrants.registrants !== 'undefined') {
-        var registrants = {
-            typeName: "registrants",
-            typeClass: "compound",
-            multiple: true,
-            value: new Array
-        };
-        input.contacts_and_registrants.registrants.forEach(function(entry) {
-            Object.keys(entry).forEach(function(value) {
-                entry[value] = {
-                    typeName: value,
-                    multiple: false,
-                    typeClass: "primitive",
-                    value: entry[value]
-                }
-            });
-            registrants.value.push(entry);
-        });
-        heal.push(registrants);
+    if (typeof input.citation.heal_funded_status == 'undefined') {
+        throw "Need heal funded status"
     }
+
+    // move registrants to the top level, DV compatibility issue
+    if (typeof input.contacts_and_registrants.registrants == 'undefined') {
+        throw "need a registrant"
+    }
+
+    var registrants = {
+        typeName: "registrants",
+        typeClass: "compound",
+        multiple: true,
+        value: new Array
+    };
+    input.contacts_and_registrants.registrants.forEach(function(entry) {
+        Object.keys(entry).forEach(function(value) {
+            entry[value] = {
+                typeName: value,
+                multiple: false,
+                typeClass: "primitive",
+                value: entry[value]
+            }
+        });
+        registrants.value.push(entry);
+    });
+    heal.push(registrants);
+
 
     if (typeof input.metadata_location.data_repositories !== 'undefined') {
         // also move repositories to the top level
@@ -143,71 +152,78 @@ const healToDataverse = (input)=>{
     citation.push({ value: input.minimal_info.study_name,
         typeClass: "primitive", multiple: false, typeName: "title" });
 
-    if (typeof input.citation.investigators !== "undefined") {
-        author = { value: new Array, typeClass: "compound", multiple: true, typeName: "author"};
-        input.citation.investigators.forEach(function(investigator) {
-            // missing investigator ID
-            if (typeof investigator.investigator_ID == 'undefined') {
-                investigator.investigator_ID = [ { investigator_ID_type: "ORCID",
-                    investigator_ID_value: "" } ];
-            } if (investigator.investigator_ID == []) {
-                investigator.investigator_ID.push( { investigator_ID_type: "ORCID",
-                                                    investigator_ID_value: "" } );
-            }
-            // missing names
-            if (typeof investigator.investigator_last_name == 'undefined') {
-                investigator.investigator_last_name = "";
-            } if (typeof investigator.investigator_first_name == 'undefined') {
-                investigator.investigator_first_name = "";
-            }
+    if (typeof input.citation.investigators == "undefined") {
+        throw "Need an investigator";
+    }
+    author = { value: new Array, typeClass: "compound", multiple: true, typeName: "author"};
+    input.citation.investigators.forEach(function(investigator) {
+        // missing investigator ID
+        if (typeof investigator.investigator_ID == 'undefined') {
+            investigator.investigator_ID = [ { investigator_ID_type: "ORCID",
+                investigator_ID_value: "" } ];
+        } if (investigator.investigator_ID == []) {
+            investigator.investigator_ID.push( { investigator_ID_type: "ORCID",
+                                                investigator_ID_value: "" } );
+        } if (investigator.investigator_ID[0].investigator_ID_type !== "ORCID") {
+            throw "Only ORCID IDs currently supported"
+        }
+        // missing names
+        if (typeof investigator.investigator_last_name == 'undefined') {
+            investigator.investigator_last_name = "";
+        } if (typeof investigator.investigator_first_name == 'undefined') {
+            investigator.investigator_first_name = "";
+        } if (typeof investigator.investigator_affiliation == 'undefined') {
+            investigator.investigator_affiliation = "";
+        }
 
-            let new_investigator = {
-                authorName: {
-                    value: investigator.investigator_last_name.concat(", ", investigator.investigator_first_name),
-                    typeClass: "primitive", multiple: false, typeName: "authorName"
-                }, authorAffiliation: { value: investigator.investigator_affiliation,
-                    typeClass: "primitive", multiple: false, typeName: "authorAffiliation"
-                }, authorIdentifierScheme: { value: investigator.investigator_ID[0].investigator_ID_type,
-                    typeName: "authorIdentifierScheme", multiple: false, typeClass: "controlledVocabulary"
-                }, authorIdentifier: { value: investigator.investigator_ID[0].investigator_ID_value,
-                    typeName: "authorIdentifier", multiple : false, typeClass: "primitive"
-                }
-            };
-            author.value.push(new_investigator);
-        });
-        citation.push(author);
+        let new_investigator = {
+            authorName: {
+                value: investigator.investigator_last_name.concat(", ", investigator.investigator_first_name),
+                typeClass: "primitive", multiple: false, typeName: "authorName"
+            }, authorAffiliation: { value: investigator.investigator_affiliation,
+                typeClass: "primitive", multiple: false, typeName: "authorAffiliation"
+            }, authorIdentifierScheme: { value: investigator.investigator_ID[0].investigator_ID_type,
+                typeName: "authorIdentifierScheme", multiple: false, typeClass: "controlledVocabulary"
+            }, authorIdentifier: { value: investigator.investigator_ID[0].investigator_ID_value,
+                typeName: "authorIdentifier", multiple : false, typeClass: "primitive"
+            }
+        };
+        author.value.push(new_investigator);
+    });
+    citation.push(author);
+
+    if (typeof input.contacts_and_registrants.contacts == 'undefined') {
+        throw "need a contact";
     }
 
-    if (typeof input.contacts_and_registrants.contacts !== 'undefined') {
-        datasetContact = { value: new Array, typeClass: "compound",
-            multiple: true, typeName: "datasetContact" };
-        input.contacts_and_registrants.contacts.forEach(function(contact) {
-            if (typeof contact.contact_email == 'undefined') {
-                contact.contact_email = ""
-            } if (typeof contact.contact_last_name == 'undefined') {
-                contact.contact_last_name = ""
-            } if (typeof contact.contact_first_name == "undefined") {
-                contact.contact_first_name = ""
-            }
+    datasetContact = { value: new Array, typeClass: "compound",
+        multiple: true, typeName: "datasetContact" };
+    input.contacts_and_registrants.contacts.forEach(function(contact) {
+        if (typeof contact.contact_email == 'undefined') {
+            throw "Contact missing an email address";
+        } if (typeof contact.contact_last_name == 'undefined') {
+            contact.contact_last_name = ""
+        } if (typeof contact.contact_first_name == "undefined") {
+            contact.contact_first_name = ""
+        }
 
-            let new_contact = {
-                datasetContactEmail: {
-                    typeClass: "primitive",
-                    multiple: false,
-                    typeName: "datasetContactEmail",
-                    value: contact.contact_email
-                },
-                datasetContactName: {
-                    typeClass: "primitive",
-                    multiple: false,
-                    typeName: "datasetContactName",
-                    value: contact.contact_last_name.concat(", ", contact.contact_first_name)
-                }
-            };
-            datasetContact.value.push(new_contact);
-        });
-        citation.push(datasetContact);
-    }
+        let new_contact = {
+            datasetContactEmail: {
+                typeClass: "primitive",
+                multiple: false,
+                typeName: "datasetContactEmail",
+                value: contact.contact_email
+            },
+            datasetContactName: {
+                typeClass: "primitive",
+                multiple: false,
+                typeName: "datasetContactName",
+                value: contact.contact_last_name.concat(", ", contact.contact_first_name)
+            }
+        };
+        datasetContact.value.push(new_contact);
+    });
+    citation.push(datasetContact);
 
     dsDescription = { value : new Array, typeClass: "compound", 
         multiple: true, typeName: "dsDescription" };
