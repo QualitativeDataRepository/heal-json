@@ -8,6 +8,16 @@ const healToDataverse = (input)=>{
 
     const schema = require('../data/heal-schema.json');
 
+    var Validator = require('jsonschema').Validator;
+    var v = new Validator();
+    const valid = v.validate(input, schema)
+
+    if (!valid.valid) {
+        console.log(valid.errors);
+        throw "Invalid HEAL file";
+    }
+
+
     var citation = output.datasetVersion.metadataBlocks.citation.fields;
     var heal = output.datasetVersion.metadataBlocks.heal.fields;
 
