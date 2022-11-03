@@ -5,6 +5,8 @@ const uploadDataverse = require('./src/uploadToDataverse.js');
 const healToDataverse = require('./src/convertToDataverse.js');
 const outputJSON = require('./src/output.js')
 
+const fs = require('fs')
+
 const args = process.argv.slice(2);
 if (args.length == 0) { // they didn't give any args
     console.log("Error: no argument specified");
@@ -21,9 +23,14 @@ if (args.length == 0) { // they didn't give any args
         } else { // actually fulfilled all needed args
             const  path = require('path');
             let absolute_arg = path.resolve(args[0]);
-            const input_json = require(absolute_arg);
-            const dataverseJSON = healToDataverse(input_json);
-            uploadDataverse(dataverseJSON, args[1])
+            if (fs.existsSync(absolute_arg)) {
+                const input_json = require(absolute_arg);
+                const dataverseJSON = healToDataverse(input_json);
+                uploadDataverse(dataverseJSON, args[1])
+            } else {  // but the file doesn't exist
+                console.log("Error not found: " + absolute_arg)
+                console.log("Usage: ".concat(process.argv[1].concat(" [heal.json] [api key]")));
+            }
         }
     }
 }
