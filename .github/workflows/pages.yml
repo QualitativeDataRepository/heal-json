@@ -18,8 +18,8 @@ jobs:
           front_page: README.md
       - uses: actions/upload-artifact@v1
         with:
-        name: DocumentationHTML
-        path: ./out
+            name: DocumentationHTML
+            path: ./out
       - name: Commit documentation changes
         run: |
             git clone https://github.com/QualitativeDataRepository/heal-json --branch gh-pages --single-branch gh-pages
