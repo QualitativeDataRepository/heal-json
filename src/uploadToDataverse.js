@@ -1,5 +1,9 @@
 /* istanbul ignore file */
-
+/**
+ * Upload JSON metadata to dataverse instance, creating a new project
+ * @param {object} json - Dataverse JSON file
+ * @param {string} api - API key for Dataverse instance
+ */
 const uploadDataverse = (json, api)=> {
     var https = require('https');
     let post = JSON.stringify(json);

@@ -1,3 +1,9 @@
+/**
+ * Download metadata from Dataverse and pass to conversion function
+ * @param {string} pid - persistentId of dataverse project
+ * @param {string} api - API key for dataverse instance, required for unpublished projects
+ * @param {Function} callback - Function to handle the converted HEAL metadata
+ */
 const dataverseToHEAL = (pid, api, callback)=>{
     const https = require('https');
     const generateHEAL = require('./convertToHEAL.js');

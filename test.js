@@ -13,6 +13,8 @@ test("generateHEAL", () => {
     expect(heal).toHaveProperty('contacts_and_registrants');
 });
 
+// This has too many potential errors to be a viable test
+// see the commentary in test_data/schema_faker.js
 /*test("randomHEAL", () => {
     const jsf  = require('json-schema-faker');
     const schema = require('./data/heal-schema.json');
@@ -31,6 +33,14 @@ test("convertDV", () => {
     expect(dv).toHaveProperty("datasetVersion.metadataBlocks.heal");
     expect(dv).toHaveProperty("datasetVersion.metadataBlocks.citation");
     expect(dv.datasetVersion.metadataBlocks.citation.fields).toHaveLength(5);
+});
+
+test("convertInvalidHEAL", () => {
+    const heal = require('./test_data/heal_invalid.json');
+    const healToDataverse = require('./src/convertToDataverse.js');
+    expect(() => {
+        healToDataverse(heal)
+    }).toThrow();
 });
 
 test("download", done => {

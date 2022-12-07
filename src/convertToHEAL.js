@@ -1,3 +1,8 @@
+/**
+ * Create a HEAL json-compliant object from a Dataverse metadata exports
+ * @param {object} dataverse - Dataverse JSON metadata direct from server
+ * @return {object} HEAL-compliant javascript object
+ */
 const generateHEAL = (dataverse)=>{
 
      // create template and begin extracting data

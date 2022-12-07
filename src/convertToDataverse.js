@@ -1,3 +1,8 @@
+/**
+ * Converts a HEAL json input to a Dataverse JSON output
+ * @param {object} input - HEAL json object
+ * @return {object} Dataverse JSON object to upload to a server instance
+ */
 const healToDataverse = (input)=>{
     var output = { datasetVersion: { metadataBlocks: {
             citation: { fields: new Array,
