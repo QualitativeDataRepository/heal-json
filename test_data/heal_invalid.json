@@ -1,0 +1,191 @@
+{
+    "minimal_info": {
+        "study_name": "HEAL data test",
+        "study_description": "aoeu"
+    },
+    "metadata_location": {
+        "clinical_trials_study_ID": "123",
+        "cedar_study_level_metadata_template_instance_ID": "523",
+        "data_repositories": [
+            {
+                "repository_name": "ICPSR",
+                "repository_study_ID": "12345",
+                "repository_persistent_ID": "DOI:ICPSR",
+                "repository_citation": "icpsr. foo. 2022"
+            },
+            {
+                "repository_name": "wos",
+                "repository_study_ID": "foobar",
+                "repository_persistent_ID": "DOI:foo",
+                "repository_citation": "wos. 2021"
+            }
+        ]
+    },
+    "citation": {
+        "heal_funded_status": true,
+        "study_collection_status": false,
+        "heal_platform_persistent_ID": "1235",
+        "heal_platform_citation": "HEAL. foo. 2022",
+        "investigators": [
+            {
+                "investigator_first_name": "J",
+                "investigator_last_name": "Frost",
+                "investigator_affiliation": "QDR IDP",
+                "investigator_ID": [
+                    {
+                        "investigator_ID_type": "ORCID",
+                        "investigator_ID_value": "1001"
+                    }
+                ]
+            }
+        ]
+    },
+    "contacts_and_registrants": {
+        "contacts": [
+            {
+                "contact_first_name": "R",
+                "contact_last_name": "Smith",
+                "contact_email": "smith@example.com"
+            }
+        ],
+        "registrants": [
+            {
+                "registrant_first_name": "Joe",
+                "registrant_middle_initial": "S",
+                "registrant_last_name": "Schmoe",
+                "registrant_affiliation": "Example U",
+                "registrant_email": "j@u.edu"
+            }
+        ]
+    },
+    "data_availability": {
+        "produce_data": true,
+        "data_available": "some",
+        "data_restricted": "some",
+        "data_collection_status": "started",
+        "data_release_status": "not started",
+        "produce_other": "false"
+    },
+    "findings": {
+        "primary_study_findings": [
+            "finding"
+        ],
+        "secondary_publications": [
+            "DOI:foobar"
+        ]
+    },
+    "study_translational_focus": {
+        "study_translational_focus": "Condition",
+        "study_translational_topic_grouping": [
+            "Mental Health"
+        ]
+    },
+    "study_type": {
+        "study_stage": [
+            "Basic Research",
+            "Pre-Clinical Research"
+        ],
+        "study_primary_or_secondary": "Primary Research",
+        "study_observational_or_experimental": "Experimental Research",
+        "study_subject_type": [
+            "Animal",
+            "Human cell/tissue/tissue model"
+        ],
+        "study_type_design": [
+            "Basic Research - Method/Protocol development",
+            "Basic Research - Animal study"
+        ]
+    },
+    "human_treatment_applicability": {
+        "treatment_investigation_stage_or_type": [
+            "target mechanism"
+        ],
+        "treatment_mode": [
+            "Therapeutic (treating an occurrence)"
+        ],
+        "treatment_novelty": [
+            "Established"
+        ],
+        "treatment_application_level": [
+            "Population"
+        ],
+        "treatment_type": [
+            "opioid drug",
+            "non-biologic drug"
+        ]
+    },
+    "human_condition_applicability": {
+        "condition_category": "INVALIDATE",
+        "condition_investigation_stage_or_type": [
+            "Differential risk for condition",
+            "Mechanism of condition"
+        ],
+        "pain_causal_condition": [
+            "PAIN"
+        ],
+        "pain_treatment_or_study_target_condition": [
+            "Pain",
+            "Pain, acute"
+        ],
+        "all_treatment_or_study_target_condition": [
+            "target"
+        ],
+        "all_outcome_condition": [
+            "outcome"
+        ],
+        "all_other_condition": [
+            "other"
+        ]
+    },
+    "human_subject_applicability": {
+        "gender_applicability": [
+            "Agender, Non-binary, gender non-conforming"
+        ],
+        "sexual_identity_applicability": [
+            "Homosexual",
+            "Bisexual"
+        ],
+        "age_applicability": [
+            "Child, preschool (2 to 5 years)",
+            "Child (6 to 12 years)"
+        ],
+        "irb_vulnerability_conditions_applicability": [
+            "Human fetuses"
+        ],
+        "geographic_applicability": [
+            "US - National"
+        ]
+    },
+    "data": {
+        "data_orientation": [
+            "Qualitative"
+        ],
+        "data_source": [
+            "Government Collected/Measured",
+            "Laboratory"
+        ],
+        "data_type": [
+            "Proteomic",
+            "Biochemical"
+        ],
+        "subject_data_unit_of_collection": [
+            "Community, Group, Cluster, Population"
+        ],
+        "subject_data_unit_of_collection_expected_number": 5,
+        "subject_data_unit_of_analysis": [
+            "Individual"
+        ],
+        "subject_data_unit_of_analysis_expected_number": 5,
+        "subject_data_level_available": [
+            "Aggregated, by demographic variable(s)",
+            "Aggregated, by geographic variable(s)"
+        ],
+        "subject_geographic_data_level_collected": [
+            "State",
+            "Multi-state region"
+        ],
+        "subject_geographic_data_level_available": [
+            "Exact location"
+        ]
+    }
+}
